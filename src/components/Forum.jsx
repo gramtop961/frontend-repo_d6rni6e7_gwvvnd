@@ -13,7 +13,7 @@ export default function Forum({ threads, onCreateThread, onAddReply, currentUser
   };
 
   return (
-    <div className="bg-white/70 backdrop-blur-sm rounded-xl p-4 shadow border border-gray-200">
+    <div className="bg-white/10 backdrop-blur-xl rounded-2xl p-5 shadow border border-white/10 text-white">
       <h2 className="text-xl font-semibold mb-4">Forum / Форум</h2>
 
       {currentUser ? (
@@ -22,41 +22,41 @@ export default function Forum({ threads, onCreateThread, onAddReply, currentUser
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Thread title / Заголовок темы"
-            className="px-3 py-2 rounded-lg bg-white border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="px-3 py-2 rounded-xl bg-black/40 text-white placeholder:text-white/40 border border-white/20 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <textarea
             value={content}
             onChange={(e) => setContent(e.target.value)}
             placeholder="Write something... / Напишите сообщение..."
-            className="px-3 py-2 rounded-lg bg-white border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[90px]"
+            className="px-3 py-2 rounded-xl bg-black/40 text-white placeholder:text-white/40 border border-white/20 focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[90px]"
           />
-          <button className="px-4 py-2 rounded-lg bg-emerald-600 text-white hover:bg-emerald-700 transition">
+          <button className="px-4 py-2 rounded-xl bg-emerald-600 text-white hover:bg-emerald-700 transition shadow-lg shadow-emerald-500/20">
             Publish / Опубликовать
           </button>
         </form>
       ) : (
-        <p className="text-sm text-gray-500 mb-4">Please sign in to post / Войдите, чтобы публиковать</p>
+        <p className="text-sm text-white/60 mb-4">Please sign in to post / Войдите, чтобы публиковать</p>
       )}
 
       <ul className="grid gap-4">
         {threads.map((t) => (
-          <li key={t.id} className="border border-gray-200 rounded-lg p-3 bg-white">
+          <li key={t.id} className="border border-white/10 rounded-xl p-3 bg-white/5">
             <div className="flex items-center justify-between">
               <h3 className="font-medium">{t.title}</h3>
-              <span className="text-xs text-gray-500">by {t.author} • {new Date(t.created_at).toLocaleString()}</span>
+              <span className="text-xs text-white/60">by {t.author} • {new Date(t.created_at).toLocaleString()}</span>
             </div>
-            <p className="text-gray-700 mt-1 whitespace-pre-wrap">{t.content}</p>
+            <p className="text-white/90 mt-1 whitespace-pre-wrap">{t.content}</p>
 
             <div className="mt-3">
               <h4 className="text-sm font-semibold mb-2">Replies / Ответы</h4>
               <ul className="grid gap-2">
                 {t.replies?.map((r, idx) => (
-                  <li key={idx} className="text-sm bg-gray-50 rounded p-2 border border-gray-200">
+                  <li key={idx} className="text-sm bg-black/30 rounded p-2 border border-white/10">
                     <span className="font-medium">{r.author}:</span> {r.text}
                   </li>
                 ))}
                 {(!t.replies || t.replies.length === 0) && (
-                  <li className="text-sm text-gray-500">No replies yet / Пока нет ответов</li>
+                  <li className="text-sm text-white/60">No replies yet / Пока нет ответов</li>
                 )}
               </ul>
 
@@ -69,7 +69,7 @@ export default function Forum({ threads, onCreateThread, onAddReply, currentUser
           </li>
         ))}
         {threads.length === 0 && (
-          <li className="text-sm text-gray-500">No threads yet / Пока нет тем</li>
+          <li className="text-sm text-white/60">No threads yet / Пока нет тем</li>
         )}
       </ul>
     </div>
@@ -92,9 +92,9 @@ function ReplyForm({ onSubmit }) {
         value={text}
         onChange={(e) => setText(e.target.value)}
         placeholder="Reply / Ответ"
-        className="flex-1 px-3 py-2 rounded-lg bg-white border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="flex-1 px-3 py-2 rounded-xl bg-black/40 text-white placeholder:text-white/40 border border-white/20 focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
-      <button className="px-3 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700">Send / Отправить</button>
+      <button className="px-3 py-2 rounded-xl bg-blue-600 text-white hover:bg-blue-700 shadow-lg shadow-blue-500/20">Send / Отправить</button>
     </form>
   );
 }

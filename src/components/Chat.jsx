@@ -24,18 +24,18 @@ export default function Chat({ channels, activeChannelId, onCreateChannel, onSen
   };
 
   return (
-    <div className="bg-white/70 backdrop-blur-sm rounded-xl p-4 shadow border border-gray-200 h-full flex flex-col">
+    <div className="bg-white/10 backdrop-blur-xl rounded-2xl p-5 shadow border border-white/10 h-full flex flex-col text-white">
       <h2 className="text-xl font-semibold mb-3">Chat / Чат</h2>
       <div className="flex gap-4 flex-1 min-h-[320px]">
-        <div className="w-52 shrink-0 flex flex-col gap-2">
+        <div className="w-56 shrink-0 flex flex-col gap-2">
           <div className="flex items-center justify-between">
-            <span className="text-sm text-gray-600">Channels / Каналы</span>
+            <span className="text-sm text-white/70">Channels / Каналы</span>
           </div>
-          <ul className="flex-1 overflow-auto border rounded-lg bg-white">
+          <ul className="flex-1 overflow-auto border border-white/10 rounded-xl bg-white/5">
             {channels.map((c) => (
               <li
                 key={c.id}
-                className={`px-3 py-2 border-b last:border-b-0 cursor-pointer ${activeChannelId === c.id ? 'bg-blue-50 font-medium' : 'hover:bg-gray-50'}`}
+                className={`px-3 py-2 border-b border-white/10 last:border-b-0 cursor-pointer transition ${activeChannelId === c.id ? 'bg-blue-500/20 font-medium' : 'hover:bg-white/10'}`}
                 onClick={() => onSendMessage(c.id, null)}
                 title={`Switch to ${c.name}`}
               >
@@ -43,7 +43,7 @@ export default function Chat({ channels, activeChannelId, onCreateChannel, onSen
               </li>
             ))}
             {channels.length === 0 && (
-              <li className="px-3 py-2 text-sm text-gray-500">No channels / Нет каналов</li>
+              <li className="px-3 py-2 text-sm text-white/60">No channels / Нет каналов</li>
             )}
           </ul>
 
@@ -53,39 +53,39 @@ export default function Chat({ channels, activeChannelId, onCreateChannel, onSen
                 value={channelName}
                 onChange={(e) => setChannelName(e.target.value)}
                 placeholder="New channel / Новый канал"
-                className="flex-1 px-3 py-2 rounded-lg bg-white border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="flex-1 px-3 py-2 rounded-xl bg-black/40 text-white placeholder:text-white/40 border border-white/20 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
-              <button className="px-3 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700">Add</button>
+              <button className="px-3 py-2 rounded-xl bg-blue-600 text-white hover:bg-blue-700">Add</button>
             </form>
           )}
         </div>
 
-        <div className="flex-1 flex flex-col border rounded-lg bg-white">
-          <div className="px-3 py-2 border-b text-sm text-gray-600">
+        <div className="flex-1 flex flex-col border border-white/10 rounded-xl bg-white/5">
+          <div className="px-3 py-2 border-b border-white/10 text-sm text-white/70">
             {channels.find((c) => c.id === activeChannelId)?.name || 'Select a channel / Выберите канал'}
           </div>
           <div className="flex-1 overflow-auto p-3 space-y-2">
             {messages[activeChannelId]?.map((m, idx) => (
-              <div key={idx} className="max-w-[75%] p-2 rounded-lg border bg-gray-50">
-                <div className="text-xs text-gray-500 mb-0.5">{m.author} • {new Date(m.created_at).toLocaleTimeString()}</div>
+              <div key={idx} className="max-w-[75%] p-2 rounded-xl border border-white/10 bg-black/30">
+                <div className="text-xs text-white/60 mb-0.5">{m.author} • {new Date(m.created_at).toLocaleTimeString()}</div>
                 <div className="whitespace-pre-wrap">{m.text}</div>
               </div>
             ))}
             {(!messages[activeChannelId] || messages[activeChannelId].length === 0) && (
-              <div className="text-sm text-gray-500">No messages / Нет сообщений</div>
+              <div className="text-sm text-white/60">No messages / Нет сообщений</div>
             )}
             <div ref={endRef} />
           </div>
 
           {currentUser && activeChannelId && (
-            <form onSubmit={handleSend} className="p-2 border-t flex gap-2">
+            <form onSubmit={handleSend} className="p-2 border-t border-white/10 flex gap-2">
               <input
                 value={text}
                 onChange={(e) => setText(e.target.value)}
                 placeholder="Message / Сообщение"
-                className="flex-1 px-3 py-2 rounded-lg bg-white border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="flex-1 px-3 py-2 rounded-xl bg-black/40 text-white placeholder:text-white/40 border border-white/20 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
-              <button className="px-3 py-2 rounded-lg bg-emerald-600 text-white hover:bg-emerald-700">Send</button>
+              <button className="px-3 py-2 rounded-xl bg-emerald-600 text-white hover:bg-emerald-700">Send</button>
             </form>
           )}
         </div>
