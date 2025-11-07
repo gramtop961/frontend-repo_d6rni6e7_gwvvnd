@@ -1,100 +1,32 @@
-import { useState } from 'react';
+import React from 'react';
+import { MessageSquare } from 'lucide-react';
 
-export default function Forum({ threads, onCreateThread, onAddReply, currentUser }) {
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
-
-  const handleCreate = (e) => {
-    e.preventDefault();
-    if (!title.trim() || !content.trim()) return;
-    onCreateThread({ title: title.trim(), content: content.trim() });
-    setTitle('');
-    setContent('');
-  };
+export default function Forum({ lang = 'en', threads = [] }) {
+  const l = lang === 'ru'
+    ? { title: 'Форум', empty: 'Пока нет тем.', replies: 'ответов' }
+    : { title: 'Forum', empty: 'No threads yet.', replies: 'replies' };
 
   return (
-    <div className="bg-white/10 backdrop-blur-xl rounded-2xl p-5 shadow border border-white/10 text-white">
-      <h2 className="text-xl font-semibold mb-4">Forum / Форум</h2>
-
-      {currentUser ? (
-        <form onSubmit={handleCreate} className="grid gap-3 mb-6">
-          <input
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder="Thread title / Заголовок темы"
-            className="px-3 py-2 rounded-xl bg-black/40 text-white placeholder:text-white/40 border border-white/20 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-          <textarea
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            placeholder="Write something... / Напишите сообщение..."
-            className="px-3 py-2 rounded-xl bg-black/40 text-white placeholder:text-white/40 border border-white/20 focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[90px]"
-          />
-          <button className="px-4 py-2 rounded-xl bg-emerald-600 text-white hover:bg-emerald-700 transition shadow-lg shadow-emerald-500/20">
-            Publish / Опубликовать
-          </button>
-        </form>
+    <div className="rounded-2xl border border-white/10 bg-zinc-900/50 backdrop-blur p-5">
+      <div className="flex items-center gap-2 text-white/90 mb-4">
+        <MessageSquare className="w-5 h-5" />
+        <h3 className="font-medium">{l.title}</h3>
+      </div>
+      {threads.length === 0 ? (
+        <p className="text-white/60 text-sm">{l.empty}</p>
       ) : (
-        <p className="text-sm text-white/60 mb-4">Please sign in to post / Войдите, чтобы публиковать</p>
+        <ul className="divide-y divide-white/5">
+          {threads.map((t) => (
+            <li key={t.id} className="py-3 flex items-start justify-between">
+              <div>
+                <p className="text-white font-medium">{t.title}</p>
+                <p className="text-white/60 text-xs mt-1">{t.author}</p>
+              </div>
+              <span className="text-white/60 text-xs">{t.replies} {l.replies}</span>
+            </li>
+          ))}
+        </ul>
       )}
-
-      <ul className="grid gap-4">
-        {threads.map((t) => (
-          <li key={t.id} className="border border-white/10 rounded-xl p-3 bg-white/5">
-            <div className="flex items-center justify-between">
-              <h3 className="font-medium">{t.title}</h3>
-              <span className="text-xs text-white/60">by {t.author} • {new Date(t.created_at).toLocaleString()}</span>
-            </div>
-            <p className="text-white/90 mt-1 whitespace-pre-wrap">{t.content}</p>
-
-            <div className="mt-3">
-              <h4 className="text-sm font-semibold mb-2">Replies / Ответы</h4>
-              <ul className="grid gap-2">
-                {t.replies?.map((r, idx) => (
-                  <li key={idx} className="text-sm bg-black/30 rounded p-2 border border-white/10">
-                    <span className="font-medium">{r.author}:</span> {r.text}
-                  </li>
-                ))}
-                {(!t.replies || t.replies.length === 0) && (
-                  <li className="text-sm text-white/60">No replies yet / Пока нет ответов</li>
-                )}
-              </ul>
-
-              {currentUser && (
-                <ReplyForm
-                  onSubmit={(text) => onAddReply(t.id, text)}
-                />
-              )}
-            </div>
-          </li>
-        ))}
-        {threads.length === 0 && (
-          <li className="text-sm text-white/60">No threads yet / Пока нет тем</li>
-        )}
-      </ul>
     </div>
-  );
-}
-
-function ReplyForm({ onSubmit }) {
-  const [text, setText] = useState('');
-  return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        if (!text.trim()) return;
-        onSubmit(text.trim());
-        setText('');
-      }}
-      className="flex gap-2 mt-2"
-    >
-      <input
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        placeholder="Reply / Ответ"
-        className="flex-1 px-3 py-2 rounded-xl bg-black/40 text-white placeholder:text-white/40 border border-white/20 focus:outline-none focus:ring-2 focus:ring-blue-500"
-      />
-      <button className="px-3 py-2 rounded-xl bg-blue-600 text-white hover:bg-blue-700 shadow-lg shadow-blue-500/20">Send / Отправить</button>
-    </form>
   );
 }
