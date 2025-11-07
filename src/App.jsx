@@ -1,9 +1,10 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, Suspense } from 'react';
 import Hero from './components/Hero';
 import AuthPanel from './components/AuthPanel';
 import Forum from './components/Forum';
 import RequestBoard from './components/RequestBoard';
 import Chat from './components/Chat';
+import ErrorBoundary from './components/ErrorBoundary';
 
 export default function App() {
   const [lang, setLang] = useState('en');
@@ -37,47 +38,51 @@ export default function App() {
         sections: { forum: 'Forum', requests: 'Requests', chat: 'Chat' } };
 
   return (
-    <div className="min-h-screen bg-black text-white">
-      <header className="sticky top-0 z-50 backdrop-blur bg-black/50 border-b border-white/10">
-        <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-white/90 to-white/40" />
-            <div>
-              <div className="text-lg font-semibold">{labels.brand}</div>
-              <div className="text-xs text-white/60">{labels.desc}</div>
+    <ErrorBoundary lang={lang}>
+      <div className="min-h-screen bg-black text-white">
+        <header className="sticky top-0 z-50 backdrop-blur bg-black/50 border-b border-white/10">
+          <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-white/90 to-white/40" />
+              <div>
+                <div className="text-lg font-semibold">{labels.brand}</div>
+                <div className="text-xs text-white/60">{labels.desc}</div>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => setLang((l) => (l === 'en' ? 'ru' : 'en'))}
+                className="text-sm px-3 py-1.5 rounded-lg border border-white/20 hover:border-white/40 transition"
+              >
+                {labels.switch}
+              </button>
             </div>
           </div>
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => setLang((l) => (l === 'en' ? 'ru' : 'en'))}
-              className="text-sm px-3 py-1.5 rounded-lg border border-white/20 hover:border-white/40 transition"
-            >
-              {labels.switch}
-            </button>
-          </div>
-        </div>
-      </header>
+        </header>
 
-      <main className="max-w-6xl mx-auto px-4 py-6 space-y-6">
-        <Hero lang={lang} />
+        <main className="max-w-6xl mx-auto px-4 py-6 space-y-6">
+          <Suspense fallback={<div className="h-[70vh] rounded-2xl border border-white/10 bg-zinc-900/40 animate-pulse" />}> 
+            <Hero lang={lang} />
+          </Suspense>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 space-y-6">
-            <Forum lang={lang} threads={demoThreads} />
-            <RequestBoard lang={lang} items={demoRequests} />
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2 space-y-6">
+              <Forum lang={lang} threads={demoThreads} />
+              <RequestBoard lang={lang} items={demoRequests} />
+            </div>
+            <div className="space-y-6">
+              <AuthPanel lang={lang} />
+              <Chat lang={lang} messages={demoMessages} />
+            </div>
           </div>
-          <div className="space-y-6">
-            <AuthPanel lang={lang} />
-            <Chat lang={lang} messages={demoMessages} />
-          </div>
-        </div>
-      </main>
+        </main>
 
-      <footer className="border-t border-white/10 py-6">
-        <div className="max-w-6xl mx-auto px-4 text-sm text-white/50">
-          © {new Date().getFullYear()} LandJav — All regions welcome.
-        </div>
-      </footer>
-    </div>
+        <footer className="border-t border-white/10 py-6">
+          <div className="max-w-6xl mx-auto px-4 text-sm text-white/50">
+            © {new Date().getFullYear()} LandJav — All regions welcome.
+          </div>
+        </footer>
+      </div>
+    </ErrorBoundary>
   );
 }
