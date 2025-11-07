@@ -3,22 +3,20 @@ import React from 'react';
 class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { hasError: false };
+    this.state = { hasError: false, error: null };
   }
 
-  static getDerivedStateFromError() {
-    return { hasError: true };
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
   }
 
-  componentDidCatch(error, info) {
-    // Optional: log to monitoring service
-    // console.error('ErrorBoundary caught:', error, info);
+  componentDidCatch(error, errorInfo) {
+    // In a real app you could log to an external service here
+    // console.error('ErrorBoundary caught:', error, errorInfo);
   }
 
   handleReload = () => {
-    if (typeof window !== 'undefined') {
-      window.location.reload();
-    }
+    if (typeof window !== 'undefined') window.location.reload();
   };
 
   render() {
@@ -26,30 +24,22 @@ class ErrorBoundary extends React.Component {
     const lang = this.props.lang || 'en';
 
     if (hasError) {
-      const l =
-        lang === 'ru'
-          ? {
-              title: 'Что-то пошло не так',
-              desc: 'Произошла непредвиденная ошибка. Обновите страницу, чтобы продолжить.',
-              reload: 'Обновить',
-            }
-          : {
-              title: 'Something went wrong',
-              desc: 'An unexpected error occurred. Reload the page to continue.',
-              reload: 'Reload',
-            };
-
       return (
-        <div className="min-h-screen bg-black text-white flex items-center justify-center p-6">
-          <div className="max-w-md w-full rounded-2xl border border-white/10 bg-zinc-900/60 backdrop-blur p-6 text-center">
-            <div className="mx-auto w-12 h-12 rounded-full bg-white/10 border border-white/10 mb-4" />
-            <h2 className="text-xl font-semibold">{l.title}</h2>
-            <p className="text-white/70 text-sm mt-2">{l.desc}</p>
+        <div className="min-h-screen w-full bg-black text-white flex items-center justify-center p-6">
+          <div className="max-w-lg w-full border border-white/10 rounded-2xl p-8 bg-white/5 backdrop-blur">
+            <h1 className="text-2xl font-semibold mb-2">
+              {lang === 'ru' ? 'Что-то пошло не так' : 'Something went wrong'}
+            </h1>
+            <p className="text-white/70 mb-6">
+              {lang === 'ru'
+                ? 'Мы уже работаем над исправлением. Попробуйте обновить страницу.'
+                : 'We are working to fix this. Please try reloading the page.'}
+            </p>
             <button
               onClick={this.handleReload}
-              className="mt-4 inline-flex items-center justify-center px-4 py-2 rounded-lg border border-white/20 bg-white text-black hover:opacity-90 transition"
+              className="px-4 py-2 rounded-lg bg-white text-black font-medium hover:bg-white/90 transition"
             >
-              {l.reload}
+              {lang === 'ru' ? 'Перезагрузить' : 'Reload'}
             </button>
           </div>
         </div>
